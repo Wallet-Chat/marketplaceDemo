@@ -1,1 +1,1 @@
-# marketplaceDemo
+# ethereum-boilerplate
