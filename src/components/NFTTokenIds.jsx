@@ -16,6 +16,7 @@ import {
 import { useMoralisDapp } from "providers/MoralisDappProvider/MoralisDappProvider";
 import { getExplorer } from "helpers/networks";
 import { useWeb3ExecuteFunction } from "react-moralis";
+import WalletChatWidget from '../components/WalletChat/WalletChat'
 const { Meta } = Card;
 
 const styles = {
@@ -170,6 +171,7 @@ function NFTTokenIds({ inputValue, setInputValue }) {
 
   return (
     <>
+      <div>
       <div>
         {contractABIJson.noContractDeployed && (
           <>
@@ -338,6 +340,8 @@ function NFTTokenIds({ inputValue, setInputValue }) {
             />
           </Modal>
         )}
+      </div>
+      <WalletChatWidget />
       </div>
     </>
   );
