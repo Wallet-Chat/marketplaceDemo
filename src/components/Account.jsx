@@ -1,49 +1,109 @@
-import React from "react";
+import { useMoralisDapp } from "providers/MoralisDappProvider/MoralisDappProvider";
 import { useMoralis } from "react-moralis";
+import { getEllipsisTxt } from "helpers/formatters";
+import Blockie from "./Blockie";
+import { Button, Card, Modal } from "antd";
+import { useState } from "react";
 import Address from "./Address/Address";
-import NativeBalance from "./NativeBalance";
-
+import { SelectOutlined } from "@ant-design/icons";
+import { getExplorer } from "helpers/networks";
 const styles = {
   account: {
     height: "42px",
-    gap: "5px",
-    width: "fit-content",
-    boxShadow: "0px 4px 4px rgba(0, 0, 0, 0.25)",
-    borderRadius: "10px",
+    padding: "0 15px",
     display: "flex",
     justifyContent: "center",
     alignItems: "center",
-    fontFamily: "Roboto, sans-serif",
-    fontWeight: "700",
-    fontSize: "16px",
-    color: "white",
-    backgroundColor: "#041836",
+    width: "fit-content",
+    borderRadius: "12px",
+    backgroundColor: "rgb(244, 244, 244)",
     cursor: "pointer",
   },
-  wrapper: { padding: "0 3px 0 10px" },
+  text: {
+    color: "#21BF96",
+  },
 };
 
 function Account() {
   const { authenticate, isAuthenticated, logout } = useMoralis();
+  const { walletAddress, chainId } = useMoralisDapp();
+  const [isModalVisible, setIsModalVisible] = useState(false);
 
   if (!isAuthenticated) {
     return (
-      <div style={styles.account}>
-        <p
-          onClick={() => authenticate({ signingMessage: "Hello World!" })}
-          style={{ padding: "0 10px" }}
-        >
-          Authenticate
-        </p>
+      <div
+        style={styles.account}
+        onClick={() => authenticate({ signingMessage: "Hello World!" })}
+      >
+        <p style={styles.text}>Authenticate</p>
       </div>
     );
   }
 
   return (
-    <div style={{ ...styles.account, ...styles.wrapper }} onClick={() => logout()}>
-      <NativeBalance />
-      <Address avatar size="5" />
-    </div>
+    <>
+      <div style={styles.account} onClick={() => setIsModalVisible(true)}>
+        <p style={{ marginRight: "5px", ...styles.text }}>
+          {getEllipsisTxt(walletAddress, 6)}
+        </p>
+        <Blockie currentWallet scale={3} />
+      </div>
+      <Modal
+        visible={isModalVisible}
+        footer={null}
+        onCancel={() => setIsModalVisible(false)}
+        bodyStyle={{
+          padding: "15px",
+          fontSize: "17px",
+          fontWeight: "500",
+        }}
+        style={{ fontSize: "16px", fontWeight: "500" }}
+        width="400px"
+      >
+        Account
+        <Card
+          style={{
+            marginTop: "10px",
+            borderRadius: "1rem",
+          }}
+          bodyStyle={{ padding: "15px" }}
+        >
+          <Address
+            avatar="left"
+            size={6}
+            copyable
+            style={{ fontSize: "20px" }}
+          />
+          <div style={{ marginTop: "10px", padding: "0 10px" }}>
+            <a
+              href={`${getExplorer(chainId)}/address/${walletAddress}`}
+              target="_blank"
+              rel="noreferrer"
+            >
+              <SelectOutlined style={{ marginRight: "5px" }} />
+              View on Explorer
+            </a>
+          </div>
+        </Card>
+        <Button
+          size="large"
+          type="primary"
+          style={{
+            width: "100%",
+            marginTop: "10px",
+            borderRadius: "0.5rem",
+            fontSize: "16px",
+            fontWeight: "500",
+          }}
+          onClick={() => {
+            logout();
+            setIsModalVisible(false);
+          }}
+        >
+          Disconnect Wallet
+        </Button>
+      </Modal>
+    </>
   );
 }
 

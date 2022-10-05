@@ -171,7 +171,7 @@ function NFTTokenIds({ inputValue, setInputValue }) {
 
   return (
     <>
-      <div>
+    <div>
       <div>
         {contractABIJson.noContractDeployed && (
           <>

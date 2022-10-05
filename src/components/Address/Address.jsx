@@ -7,7 +7,6 @@ import "./identicon.css";
 
 const styles = {
   address: {
-    padding: "0 6px",
     height: "36px",
     display: "flex",
     gap: "5px",
@@ -23,8 +22,8 @@ function Address(props) {
   const [isClicked, setIsClicked] = useState(false);
 
   useEffect(() => {
-    setAddress(walletAddress);
-  }, [walletAddress]);
+    setAddress(props?.address || walletAddress);
+  }, [walletAddress, props]);
 
   if (!address) return null;
 
@@ -54,9 +53,10 @@ function Address(props) {
   );
 
   return (
-    <div style={styles.address}>
-      {props.avatar && <Blockie address={address} size={7} />}
+    <div style={{ ...styles.address, ...props.style }}>
+      {props.avatar === "left" && <Blockie address={address} size={7} />}
       <p>{props.size ? getEllipsisTxt(address, props.size) : address}</p>
+      {props.avatar === "right" && <Blockie address={address} size={7} />}
       {props.copyable && (isClicked ? <Check /> : <Copy />)}
     </div>
   );
@@ -70,7 +70,7 @@ const Check = () => (
     height="24"
     viewBox="0 0 24 24"
     strokeWidth="3"
-    stroke="rgb(33, 191, 150)"
+    stroke="#21BF96"
     fill="none"
     strokeLinecap="round"
     strokeLinejoin="round"
