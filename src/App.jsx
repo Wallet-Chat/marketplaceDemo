@@ -54,12 +54,6 @@ const App = ({ isServerInfo }) => {
   const { isWeb3Enabled, enableWeb3, isAuthenticated, isWeb3EnableLoading } =
     useMoralis();
 
-    window.addEventListener("message", (e) => {
-      var data = e.data;
-      console.log("RECEIVED message from CHILD TO PARENT", data);
-    
-    });
-
   const [inputValue, setInputValue] = useState("explore");
 
   useEffect(() => {
