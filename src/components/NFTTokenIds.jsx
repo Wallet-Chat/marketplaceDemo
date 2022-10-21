@@ -63,6 +63,8 @@ function NFTTokenIds({ inputValue, setInputValue }) {
   const { NFTTokenIds, totalNFTs, fetchSuccess } = useNFTTokenIds(inputValue);
   const [visible, setVisibility] = useState(false);
   const [nftToBuy, setNftToBuy] = useState(null);
+  const [ownerAddr, setOwnerAddr] = useState(null);
+  const [isWidgetOpen, setIsWidgetOpen] = useState(false)
   const [loading, setLoading] = useState(false);
   const contractProcessor = useWeb3ExecuteFunction();
   const { chainId, marketAddress, contractABI, walletAddress } =
@@ -253,13 +255,12 @@ function NFTTokenIds({ inputValue, setInputValue }) {
               <Card
                 hoverable
                 actions={[
-                  <Tooltip title="View On Blockexplorer">
+                  <Tooltip title="Chat With Owner">
                     <FileSearchOutlined
-                      onClick={() =>
-                        window.open(
-                          `${getExplorer(chainId)}address/${nft.token_address}`,
-                          "_blank"
-                        )
+                      onClick={() => {
+                          setOwnerAddr('0x4a8a9147ab0df5a8949f964bdba22dc4583280e2')
+                          setIsWidgetOpen(true)
+                        }
                       }
                     />
                   </Tooltip>,
@@ -342,7 +343,7 @@ function NFTTokenIds({ inputValue, setInputValue }) {
           </Modal>
         )}
       </div>
-      <WalletChatWidget />
+      <WalletChatWidget chatAddr={ownerAddr} isOpen={isWidgetOpen} setIsOpen={setIsWidgetOpen}/>
       </div>
     </>
   );
