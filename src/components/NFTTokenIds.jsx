@@ -16,8 +16,8 @@ import {
 import { useMoralisDapp } from "providers/MoralisDappProvider/MoralisDappProvider";
 import { getExplorer } from "helpers/networks";
 import { useWeb3ExecuteFunction } from "react-moralis";
-import { WalletChatWidget } from 'react-wallet-chat'
-import 'react-wallet-chat/dist/index.css'
+import { WalletChatWidget } from 'react-wallet-chat-nf3'
+import 'react-wallet-chat-nf3/dist/index.css'
 const { Meta } = Card;
 
 const styles = {
