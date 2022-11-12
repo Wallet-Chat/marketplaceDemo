@@ -11627,9 +11627,9 @@ react-scripts@4.0.3:
     fsevents "^2.1.3"
 
 react-wallet-chat-nf3@^1.0.2:
-  version "1.0.2"
-  resolved "https://registry.yarnpkg.com/react-wallet-chat-nf3/-/react-wallet-chat-nf3-1.0.2.tgz#d61bdd363021916fd48cf910d88f6f094e7a78d2"
-  integrity sha512-0hUcaOkb+/5K6n1CS/ALcawghzwWGXfRcl2UqcdWUZe4E20Z44DTlumi0SJIV+8aaONvfbnpwiKJdJmWMIQUoQ==
+  version "1.1.0"
+  resolved "https://registry.yarnpkg.com/react-wallet-chat-nf3/-/react-wallet-chat-nf3-1.1.0.tgz#4736504f629e105934c445965004532cb8205ff3"
+  integrity sha512-Cqv/wAk5e59gVjNsoXoQzTju+8JPpMocxuIj8RG+QCxNmDIU8xeAbSLJ3W/2q9gHtEXz86w2toQtIW7LbclNBA==
 
 react@^17.0.2:
   version "17.0.2"

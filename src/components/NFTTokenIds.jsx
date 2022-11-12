@@ -64,7 +64,7 @@ function NFTTokenIds({ inputValue, setInputValue }) {
   const [visible, setVisibility] = useState(false);
   const [nftToBuy, setNftToBuy] = useState(null);
   const [chatAddr, setChatAddr] = useState("0x818cF89054B3A5E03D4677b52982E8319D009194")
-  const [isWidgetOpen, setIsWidgetOpen] = useState(false)
+  const [widgetState, setWidgetState] = useState({})
   const [loading, setLoading] = useState(false);
   const contractProcessor = useWeb3ExecuteFunction();
   const { chainId, marketAddress, contractABI, walletAddress } =
@@ -258,8 +258,14 @@ function NFTTokenIds({ inputValue, setInputValue }) {
                   <Tooltip title="Chat With Owner">
                     <FileSearchOutlined
                       onClick={() => {
-                          setChatAddr('0x17FA0A61bf1719D12C08c61F211A063a58267A19')
-                          setIsWidgetOpen(true)
+                          setChatAddr('0x17FA0A61bf1719D12C08c61F211A063a58267A19') 
+                          setWidgetState(
+                            {
+                              ...widgetState, 
+                              chatAddr,
+                              isOpen: true
+                            }
+                          )
                         }
                       }
                     />
@@ -343,7 +349,7 @@ function NFTTokenIds({ inputValue, setInputValue }) {
           </Modal>
         )}
       </div>
-      <WalletChatWidget chatAddr={chatAddr} setChatAddr={setChatAddr} isOpen={isWidgetOpen} setIsOpen={setIsWidgetOpen} />
+      <WalletChatWidget widgetState={widgetState}/>
       </div>
     </>
   );
