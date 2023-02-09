@@ -1,2 +1,2 @@
 # marketplaceDemo
-Demo for WalletChat 
+Demo for WalletChat  
