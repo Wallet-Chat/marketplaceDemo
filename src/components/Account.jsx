@@ -202,8 +202,7 @@ const connectWallet = async () => {
                  const messageToSign = _siweMessage.prepareMessage();
                  const signature = await _signer.signMessage(messageToSign); 
                  //console.log("signature", signature);                  
-                 //const recoveredAddress = ethers.utils.verifyMessage(messageToSign, signature);
-                 
+                   
                  const authSig = {
                    sig: signature,
                    derivedVia: "web3.eth.personal.sign",
