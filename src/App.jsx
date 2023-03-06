@@ -18,6 +18,8 @@ import NativeBalance from "components/NativeBalance";
 import "./style.css";
 import Text from "antd/lib/typography/Text";
 import NFTMarketTransactions from "components/NFTMarketTransactions";
+import { WalletChatWidget } from 'react-wallet-chat-nf3'
+import 'react-wallet-chat-nf3/dist/index.css'
 const { Header, Footer } = Layout;
 
 const styles = {
@@ -55,6 +57,7 @@ const App = ({ isServerInfo }) => {
     useMoralis();
 
   const [inputValue, setInputValue] = useState("explore");
+  const [widgetState, setWidgetState] = useState({})
 
   useEffect(() => {
     if (isAuthenticated && !isWeb3Enabled && !isWeb3EnableLoading) enableWeb3();
@@ -92,7 +95,7 @@ const App = ({ isServerInfo }) => {
           <div style={styles.headerRight}>
             <Chains />
             <NativeBalance />
-            <Account />
+            <Account widgetState={widgetState} setWidgetState={setWidgetState}/>
           </div>
         </Header>
         <div style={styles.content}>
@@ -101,7 +104,7 @@ const App = ({ isServerInfo }) => {
               <NFTBalance />
             </Route>
             <Route path="/NFTMarketPlace">
-              <NFTTokenIds inputValue={inputValue} setInputValue={setInputValue}/>
+              <NFTTokenIds inputValue={inputValue} setInputValue={setInputValue} widgetState={widgetState} setWidgetState={setWidgetState}/>
             </Route>
             <Route path="/Transactions">
               <NFTMarketTransactions />
@@ -144,6 +147,7 @@ const App = ({ isServerInfo }) => {
             Moralis
           </a>
         </Text>
+        <WalletChatWidget widgetState={widgetState}/>
       </Footer>
     </Layout>
   );

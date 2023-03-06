@@ -14,6 +14,8 @@ import Web3Modal from '@0xsequence/web3modal'
 import { SiweMessage } from 'siwe'
 import WalletConnectProvider from '@walletconnect/web3-provider'
 import { sequence } from '0xsequence'
+import { WalletChatWidget } from "react-wallet-chat-nf3";
+
 const styles = {
   account: {
     height: "42px",
@@ -63,7 +65,7 @@ const web3Modal = new Web3Modal({
   providerOptions, // required
 })
 
-const connectWallet = async () => {
+const connectWallet = async (widgetState, setWidgetState) => {
   console.log('connectWallet')
   try {
      let _provider, _account, _nonce, _signer, _instance
@@ -202,7 +204,7 @@ const connectWallet = async () => {
                  const messageToSign = _siweMessage.prepareMessage();
                  const signature = await _signer.signMessage(messageToSign); 
                  //console.log("signature", signature);                  
-                   
+
                  const authSig = {
                    sig: signature,
                    derivedVia: "web3.eth.personal.sign",
@@ -213,25 +215,52 @@ const connectWallet = async () => {
               //const signature = await _signer.signMessage(_nonce)
               console.log('✅[INFO][Signature]:', signature)
 
-              fetch(`${process.env.REACT_APP_REST_API}/signin`, {
-                 body: JSON.stringify({ "name": network.chainId.toString(), "address": _account, "nonce": _nonce, "msg": messageToSign, "sig": signature }),
-                 headers: {
-                 'Content-Type': 'application/json'
-                 },
-                 method: 'POST'
-              })
-              .then((response) => response.json())
-              .then(async (data) => {
-                 //Used for LIT encryption authSign parameter
-                 // localStorage.setItem('lit-auth-signature', JSON.stringify(authSig));
-                 // localStorage.setItem('lit-web3-provider', _provider.connection.url);
-                 console.log('✅[INFO][JWT]:', data.access)
+            //   let dataToChildWindow = [];
+            //   dataToChildWindow["signature"] = signature
+            //   dataToChildWindow["messageToSign"] = messageToSign
+            //   dataToChildWindow["nonce"] = _nonce      //nonce from WalletChat API
+            //   dataToChildWindow["address"] = _account  //wallet address
+            //   //can we just hardcode this to "metamask"?
+            //   dataToChildWindow["provider"] = _provider
 
-                 localStorage.setItem('jwt_' + _account, data.access);
-              })
-              .catch((error) => {
-                 console.error('🚨[GET][Sign-In Failed]:', error)
-              })
+            //   //send message to child (main walletchat web app) for notifications when using widget
+            //   let msg = {
+            //     "data": dataToChildWindow,
+            //     "target": "signin"
+            //  }
+
+            
+              setWidgetState(
+                {
+                  ...widgetState, 
+                  signature: signature,
+                  messageToSign: messageToSign,
+                  address: _account,
+                  nonce: _nonce,
+                  chainId: network.chainId,
+                  provider: _provider.connection.url
+                }
+              )
+
+              // fetch(`${process.env.REACT_APP_REST_API}/signin`, {
+              //    body: JSON.stringify({ "name": network.chainId.toString(), "address": _account, "nonce": _nonce, "msg": messageToSign, "sig": signature }),
+              //    headers: {
+              //    'Content-Type': 'application/json'
+              //    },
+              //    method: 'POST'
+              // })
+              // .then((response) => response.json())
+              // .then(async (data) => {
+              //    //Used for LIT encryption authSign parameter
+              //    // localStorage.setItem('lit-auth-signature', JSON.stringify(authSig));
+              //    // localStorage.setItem('lit-web3-provider', _provider.connection.url);
+              //    console.log('✅[INFO][JWT]:', data.access)
+
+              //    localStorage.setItem('jwt_' + _account, data.access);
+              // })
+              // .catch((error) => {
+              //    console.error('🚨[GET][Sign-In Failed]:', error)
+              // })
            })
            .catch((error) => {
               console.error('🚨[GET][Nonce]:', error)
@@ -246,7 +275,7 @@ const connectWallet = async () => {
   }
 }
 
-function Account() {
+function Account({widgetState, setWidgetState}) {
   const { authenticate, isAuthenticated, logout } = useMoralis();
   const { walletAddress, chainId } = useMoralisDapp();
   const [isModalVisible, setIsModalVisible] = useState(false);
@@ -255,7 +284,7 @@ function Account() {
     return (
       <div
         style={styles.account}
-        onClick={() => connectWallet()}
+        onClick={() => connectWallet(widgetState, setWidgetState)}
       >
         <p style={styles.text}>Authenticate</p>
       </div>
