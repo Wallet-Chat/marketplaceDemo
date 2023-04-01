@@ -78,194 +78,58 @@ const connectWallet = async (widgetState, setWidgetState) => {
       _signer = await _provider.getSigner()
       const network = await _provider.getNetwork()
 
-        // // check if JWT exists or is timed out:
-        // fetch(` ${process.env.REACT_APP_REST_API}/${process.env.REACT_APP_API_VERSION}/welcome`, {
-        //    method: 'GET',
-        //    headers: {
-        //       'Content-Type': 'application/json',
-        //       Authorization: `Bearer ${localStorage.getItem('jwt_' + _account)}`,
-        //    },
-        // })
-        // .then((response) => response.json())
-        // .then(async (data) => {
-        //    console.log('✅[POST][Welcome]:', data.msg)
-        //    //console.log('msg log: ', data.msg.toString().includes(_account.toLocaleLowerCase()), _account.toString())
-        //    if (!data.msg.includes(_account.toLocaleLowerCase())) {
-        //       //GET JWT
-        //       fetch(` ${process.env.REACT_APP_REST_API}/users/${_account}/nonce`, {
-        //          method: 'GET',
-        //          headers: {
-        //             'Content-Type': 'application/json',
-        //          },
-        //       })
-        //       .then((response) => response.json())
-        //       .then(async (data) => {
-        //          console.log('✅[GET][Nonce]:', data)
-        //          _nonce = data.Nonce
-        //          //console.log('✅[GET][Data.nonce]:', data.Nonce)
-        //          //const signature = await _signer.signMessage("Sign to Log in to WalletChat: " + _nonce)
+      //GET JWT
+      fetch(` ${process.env.REACT_APP_REST_API}/users/${_account}/nonce`, {
+        method: 'GET',
+        headers: {
+            'Content-Type': 'application/json',
+        },
+      })
+      .then((response) => response.json())
+      .then(async (data) => {
+        console.log('✅[GET][Nonce]:', data)
+        _nonce = data.Nonce
+ 
+        //SIWE 
+        const domain = window.location.hostname;
+        const origin = window.location.protocol + domain;
+        const statement =
+          "You are signing a plain-text message to prove you own this wallet address. No gas fees or transactions will occur.";
+        
+        const _siweMessage = new SiweMessage({
+          domain,
+          address: _account,
+          statement,
+          uri: origin,
+          version: "1",
+          chainId: network.chainId,
+          nonce: _nonce,
+        });
+        
+        const messageToSign = _siweMessage.prepareMessage();
+        const signature = await _signer.signMessage(messageToSign); 
+        //console.log("signature", signature);                  
 
-        //          //SIWE and setup LIT authSig struct
-        //          const domain = "walletchat.fun";
-        //          const origin = "https://walletchat.fun";
-        //          const statement =
-        //            "You are signing a plain-text message to prove you own this wallet address. No gas fees or transactions will occur.";
-                 
-        //          const siweMessage = new SiweMessage({
-        //            domain,
-        //            address: _account,
-        //            statement,
-        //            uri: origin,
-        //            version: "1",
-        //            chainId: network.chainId,
-        //            nonce: _nonce,
-        //          });
-                 
-        //          const messageToSign = siweMessage.prepareMessage();
-        //          const signature = await _signer.signMessage(messageToSign); 
-        //          console.log("signature", signature);
-                 
-        //          //const recoveredAddress = 0x0;
-        //          //server side checks is anyway, just a double check here with ethers lib
-        //          // if (signature.length > 100) { //TODO: need a better way to determine EIP-1271
-        //          //    recoveredAddress = _account
-        //          // } else {
-        //          //    recoveredAddress = ethers.utils.verifyMessage(messageToSign, signature);
-        //          // }
-                 
-        //          const authSig = {
-        //            sig: signature,
-        //            derivedVia: "web3.eth.personal.sign",
-        //            signedMessage: messageToSign,
-        //            address: _account.toLocaleLowerCase(),
-        //          };
-        //          //end SIWE and authSig
-
-        //          //const signature = await _signer.signMessage(_nonce)
-        //          console.log('✅[INFO][AuthSig]:', authSig)
-
-        //          fetch(`${process.env.REACT_APP_REST_API}/signin`, {
-        //             body: JSON.stringify({ "name": network.chainId.toString(), "address": _account, "nonce": _nonce, "msg": messageToSign, "sig": signature }),
-        //             headers: {
-        //             'Content-Type': 'application/json'
-        //             },
-        //             method: 'POST'
-        //          })
-        //          .then((response) => response.json())
-        //          .then(async (data) => {             
-        //             //Used for LIT encryption authSign parameter
-        //             //localStorage.setItem('lit-auth-signature', JSON.stringify(authSig));
-        //             //localStorage.setItem('lit-web3-provider', _provider.connection.url);
-        //             console.log('✅[INFO][JWT]:', data.access)
-
-        //             localStorage.setItem('jwt_' + _account, data.access);
-        //          })
-        //       })
-        //       .catch((error) => {
-        //          console.error('🚨[GET][Nonce]:', error)
-        //       })
-        //       //END JWT AUTH sequence
-
-        //  //below part of /welcome check for existing token     
-        //  }
-        // })
-        // .catch((error) => {
-        //    console.error('🚨[POST][Welcome]:', error)
-           //GET JWT
-           fetch(` ${process.env.REACT_APP_REST_API}/users/${_account}/nonce`, {
-              method: 'GET',
-              headers: {
-                 'Content-Type': 'application/json',
-              },
-           })
-           .then((response) => response.json())
-           .then(async (data) => {
-              console.log('✅[GET][Nonce]:', data)
-              _nonce = data.Nonce
-              //console.log('✅[GET][Data.nonce]:', data.Nonce)
-              //const signature = await _signer.signMessage("Sign to Log in to WalletChat: " + _nonce)
-
-              //SIWE and setup LIT authSig struct
-              const domain = "walletchat.fun";
-                 const origin = "https://walletchat.fun";
-                 const statement =
-                   "You are signing a plain-text message to prove you own this wallet address. No gas fees or transactions will occur.";
-                 
-                 const _siweMessage = new SiweMessage({
-                   domain,
-                   address: _account,
-                   statement,
-                   uri: origin,
-                   version: "1",
-                   chainId: network.chainId,
-                   nonce: _nonce,
-                 });
-                 
-                 const messageToSign = _siweMessage.prepareMessage();
-                 const signature = await _signer.signMessage(messageToSign); 
-                 //console.log("signature", signature);                  
-
-                 const authSig = {
-                   sig: signature,
-                   derivedVia: "web3.eth.personal.sign",
-                   signedMessage: messageToSign,
-                   address: _account.toLocaleLowerCase(),
-                 };
-                 //end SIWE and authSig
-              //const signature = await _signer.signMessage(_nonce)
-              console.log('✅[INFO][Signature]:', signature)
-
-            //   let dataToChildWindow = [];
-            //   dataToChildWindow["signature"] = signature
-            //   dataToChildWindow["messageToSign"] = messageToSign
-            //   dataToChildWindow["nonce"] = _nonce      //nonce from WalletChat API
-            //   dataToChildWindow["address"] = _account  //wallet address
-            //   //can we just hardcode this to "metamask"?
-            //   dataToChildWindow["provider"] = _provider
-
-            //   //send message to child (main walletchat web app) for notifications when using widget
-            //   let msg = {
-            //     "data": dataToChildWindow,
-            //     "target": "signin"
-            //  }
-
-            
-              setWidgetState(
-                {
-                  ...widgetState, 
-                  signature: signature,
-                  messageToSign: messageToSign,
-                  address: _account,
-                  nonce: _nonce,
-                  chainId: network.chainId,
-                  provider: _provider.connection.url
-                }
-              )
-
-              // fetch(`${process.env.REACT_APP_REST_API}/signin`, {
-              //    body: JSON.stringify({ "name": network.chainId.toString(), "address": _account, "nonce": _nonce, "msg": messageToSign, "sig": signature }),
-              //    headers: {
-              //    'Content-Type': 'application/json'
-              //    },
-              //    method: 'POST'
-              // })
-              // .then((response) => response.json())
-              // .then(async (data) => {
-              //    //Used for LIT encryption authSign parameter
-              //    // localStorage.setItem('lit-auth-signature', JSON.stringify(authSig));
-              //    // localStorage.setItem('lit-web3-provider', _provider.connection.url);
-              //    console.log('✅[INFO][JWT]:', data.access)
-
-              //    localStorage.setItem('jwt_' + _account, data.access);
-              // })
-              // .catch((error) => {
-              //    console.error('🚨[GET][Sign-In Failed]:', error)
-              // })
-           })
-           .catch((error) => {
-              console.error('🚨[GET][Nonce]:', error)
-           })
-           //END JWT AUTH sequence
+        //end SIWE
+        //const signature = await _signer.signMessage(_nonce)
+        console.log('✅[INFO][Signature]:', signature)
+      
+        setWidgetState(
+          {
+            ...widgetState, 
+            signature: signature,
+            messageToSign: messageToSign,
+            address: _account,
+            nonce: _nonce,
+            chainId: network.chainId,
+            provider: _provider.connection.url
+          }
+        )
+      })
+      .catch((error) => {
+        console.error('🚨[GET][Nonce]:', error)
+      })
+      //END JWT AUTH sequence
   //]       })
   } catch (error) {
      console.log('🚨connectWallet', error)
