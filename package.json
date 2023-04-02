@@ -24,7 +24,7 @@
     "react-router": "^5.2.1",
     "react-router-dom": "^5.3.0",
     "react-scripts": "4.0.3",
-    "react-wallet-chat-v0": "^1.4.5",
+    "react-wallet-chat-v0": "^1.4.6",
     "siwe": "^1.1.6",
     "web-vitals": "^1.0.1",
     "yarn": "^1.22.17"
