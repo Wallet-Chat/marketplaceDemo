@@ -14,7 +14,7 @@ import Web3Modal from '@0xsequence/web3modal'
 import { SiweMessage } from 'siwe'
 import WalletConnectProvider from '@walletconnect/web3-provider'
 import { sequence } from '0xsequence'
-import { WalletChatWidget } from "react-wallet-chat-nf3";
+import { WalletChatWidget } from "react-wallet-chat-v0";
 
 const styles = {
   account: {

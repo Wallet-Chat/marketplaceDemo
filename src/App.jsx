@@ -18,8 +18,8 @@ import NativeBalance from "components/NativeBalance";
 import "./style.css";
 import Text from "antd/lib/typography/Text";
 import NFTMarketTransactions from "components/NFTMarketTransactions";
-import { WalletChatWidget } from 'react-wallet-chat-nf3'
-import 'react-wallet-chat-nf3/dist/index.css'
+import { WalletChatWidget } from 'react-wallet-chat-v0'
+import 'react-wallet-chat-v0/dist/index.css'
 const { Header, Footer } = Layout;
 
 const styles = {
