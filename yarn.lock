@@ -12548,10 +12548,10 @@ react-scripts@4.0.3:
   optionalDependencies:
     fsevents "^2.1.3"
 
-react-wallet-chat-v0@^1.4.4:
-  version "1.4.4"
-  resolved "https://registry.yarnpkg.com/react-wallet-chat-v0/-/react-wallet-chat-v0-1.4.4.tgz#1f270ee2a2144e36f7ea8b1cd72643d9649962d4"
-  integrity sha512-20OxybVZStvWNFCvN9HOcBCkKJAoJoBI8pbMvdHfirUEW+71IFUAON75pyna6r592JqPohKjqj8ZfefFfSOP9g==
+react-wallet-chat-v0@^1.4.5:
+  version "1.4.5"
+  resolved "https://registry.yarnpkg.com/react-wallet-chat-v0/-/react-wallet-chat-v0-1.4.5.tgz#7d7dc2908f4a3b0cf87118b5b841b2b0ff430dea"
+  integrity sha512-JLi/m8CDHwhIW64nUk3ebWwk3SBAHMF6zfDpdZ4p/NJ+D02SnB5pW31hMX8pltrp1p1jVz/9zYgfPPZp4ygjvw==
 
 react@^16.8.6:
   version "16.14.0"
